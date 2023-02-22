@@ -1,53 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function getTimeFromSeconds(seconds: number) {
-  const minute = 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-  const week = day * 7;
+import { calculateTime, formatCurrency } from '../utils/currency.utils';
 
-  if (seconds < minute) {
-    return seconds + (seconds === 1 ? ' second ago' : ' seconds ago');
-  } else if (seconds < hour) {
-    const minutes = Math.floor(seconds / minute);
-    return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago');
-  } else if (seconds < day) {
-    const hours = Math.floor(seconds / hour);
-    return hours + (hours === 1 ? ' hour ago' : ' hours ago');
-  } else if (seconds < week) {
-    const days = Math.floor(seconds / day);
-    return days + (days === 1 ? ' day ago' : ' days ago');
-  } else {
-    const weeks = Math.floor(seconds / week);
-    return weeks + (weeks === 1 ? ' week ago' : ' weeks ago');
-  }
-}
 export const TransactionRow = ({ transaction }: any) => {
-  const now = Date.now();
-  const timestamp = transaction.timestamp * 1000;
-  const diff = now - timestamp;
-  const diffSeconds = Math.floor(diff / 1000);
-  const timeFromNow = getTimeFromSeconds(diffSeconds);
-
-  const token0Delta = (transaction.amount0 / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const token1Delta = (transaction.amount1 / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const totalAmount = (transaction.amountUSD / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
+  const token0Delta = formatCurrency(transaction.amount0);
+  const token1Delta = formatCurrency(transaction.amount1);
+  const totalAmount = formatCurrency(transaction.amountUSD);
 
   return (
     <tr>
-      <td>{timeFromNow}</td>
+      <td>{calculateTime(transaction.timestamp)}</td>
       <td>{`${transaction.token0.symbol}/${transaction.token1.symbol}`}</td>
       <td>{token0Delta}</td>
       <td>{token1Delta}</td>
