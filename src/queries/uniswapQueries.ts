@@ -1,18 +1,5 @@
 import { gql } from '@apollo/client';
 
-export const CURRENT_GLOBAL_DATA = gql`
-  query currentGlobalData {
-    factory(id: "0x1F98431c8aD98523631AE4a59f267346ea31F984") {
-      poolCount
-      txCount
-      totalVolumeUSD
-      totalVolumeETH
-      totalValueLockedUSD
-      totalValueLockedETH
-    }
-  }
-`;
-
 export const TOP_POOLS_TVL = gql`
   query topPoolsTVL {
     pools(first: 10, orderBy: totalValueLockedUSD, orderDirection: desc) {

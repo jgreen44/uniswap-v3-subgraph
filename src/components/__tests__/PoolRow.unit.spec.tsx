@@ -1,45 +1,54 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import * as calculationsUtils from '../../utils/calculations.utils';
+import { calculateDate, lastArr } from '../../utils/calculations.utils';
 import { PoolRow } from '../index';
 
 jest.mock('../../utils/calculations.utils', () => ({
   ...jest.requireActual('../../utils/calculations.utils'),
   lastArr: jest.fn(),
-  formatCurrency: jest.fn(),
   calculateDate: jest.fn(),
+  formatter: {
+    format: jest.fn(),
+  },
 }));
 
-const pool = {
-  id: 1,
-  token0: { name: 'Token 0' },
-  token1: { name: 'Token 1' },
-  totalValueLockedUSD: 1000,
-  poolDayData: [{ date: '2022-02-22', tvlUSD: 500 }],
-};
-
 describe('PoolRow', () => {
-  it('renders the pool information', () => {
-    const mockLastArr = calculationsUtils.lastArr as jest.Mock;
-    const mockFormatCurrency = calculationsUtils.formatCurrency as jest.Mock;
-    const mockCalculateDate = calculationsUtils.calculateDate as jest.Mock;
+  const pool = {
+    id: 1,
+    token0: { name: 'Token0' },
+    token1: { name: 'Token1' },
+    totalValueLockedUSD: 1000,
+    poolDayData: [
+      { date: '2022-02-22', tvlUSD: 500 },
+      { date: '2022-02-21', tvlUSD: 400 },
+    ],
+  };
 
-    mockLastArr.mockReturnValue(0);
-    mockFormatCurrency.mockReturnValue('$1,000.00');
-    mockCalculateDate.mockReturnValue('February 22, 2022');
+  beforeEach(() => {
+    (lastArr as jest.Mock).mockReturnValue(0);
+    (calculateDate as jest.Mock).mockReturnValue('February 22, 2022');
+  });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders pool information correctly', () => {
     const { getByText } = render(<PoolRow pool={pool} />);
-    expect(getByText('1')).toBeInTheDocument();
-    expect(getByText('Token 0')).toBeInTheDocument();
-    expect(getByText('Token 1')).toBeInTheDocument();
+
+    expect(getByText(pool.id.toString())).toBeInTheDocument();
+    expect(getByText(pool.token0.name)).toBeInTheDocument();
+    expect(getByText(pool.token1.name)).toBeInTheDocument();
     expect(getByText('$1,000.00')).toBeInTheDocument();
     expect(getByText('February 22, 2022')).toBeInTheDocument();
     expect(getByText('$500.00')).toBeInTheDocument();
-    expect(mockLastArr).toHaveBeenCalledWith(pool.poolDayData);
-    expect(mockFormatCurrency).toHaveBeenCalledTimes(2);
-    expect(mockFormatCurrency).toHaveBeenCalledWith(pool.totalValueLockedUSD);
-    expect(mockFormatCurrency).toHaveBeenCalledWith(pool.poolDayData[0].tvlUSD);
-    expect(mockCalculateDate).toHaveBeenCalledWith(pool.poolDayData[0].date);
+  });
+
+  it('calls calculations.utils functions with correct arguments', () => {
+    render(<PoolRow pool={pool} />);
+
+    expect(lastArr).toHaveBeenCalledWith(pool.poolDayData);
+    expect(calculateDate).toHaveBeenCalledWith(pool.poolDayData[0].date);
   });
 });
