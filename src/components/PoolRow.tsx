@@ -1,24 +1,13 @@
 import React from 'react';
 
+import { calculateDate, formatCurrency, lastArr } from '../utils/calculations.utils';
+
 // @ts-ignore
 export const PoolRow = ({ pool }) => {
-  const totalValueLocked = (pool.totalValueLockedUSD / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const lastArr = pool.poolDayData.length - 1;
-
-  const tvl24Hour = (pool.poolDayData[lastArr].tvlUSD / 100).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const date = new Date(pool.poolDayData[0].date * 1000).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const position = lastArr(pool.poolDayData);
+  const totalValueLocked = formatCurrency(pool.totalValueLockedUSD);
+  const tvl24Hour = formatCurrency(pool.poolDayData[position].tvlUSD);
+  const date = calculateDate(pool.poolDayData[0].date);
 
   return (
     <tr>

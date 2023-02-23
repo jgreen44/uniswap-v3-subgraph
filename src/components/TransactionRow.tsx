@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { calculateTime, formatCurrency } from '../utils/currency.utils';
+import { calculateTime, formatCurrency } from '../utils/calculations.utils';
 
 export const TransactionRow = ({ transaction }: any) => {
   const token0Delta = formatCurrency(transaction.amount0);

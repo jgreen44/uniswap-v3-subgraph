@@ -5,7 +5,7 @@ export const formatCurrency = (amount: number) => {
   });
 };
 
-const getTimeFromSeconds = (seconds: number) => {
+export const getTimeFromSeconds = (seconds: number) => {
   const minute = 60;
   const hour = minute * 60;
   const day = hour * 24;
@@ -28,10 +28,20 @@ const getTimeFromSeconds = (seconds: number) => {
   }
 };
 
-export const calculateTime = (time: any) => {
+export const calculateTime = (time: number) => {
   const now = Date.now();
   const timestamp = time * 1000;
   const diff = now - timestamp;
   const diffSeconds = Math.floor(diff / 1000);
   return getTimeFromSeconds(diffSeconds);
+};
+
+export const lastArr = (element: string | any[]) => element.length - 1;
+
+export const calculateDate = (value: number) => {
+  return new Date(value * 1000).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 };
