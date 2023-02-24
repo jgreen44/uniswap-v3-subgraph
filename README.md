@@ -15,3 +15,4 @@ To run the project, follow these steps:
 4.  Open your web browser and navigate to `http://localhost:3000/` to view the frontend.
 ---
 
+![screencapture-aesthetic-maamoul-2e6215-netlify-app](https://user-images.githubusercontent.com/52048026/221259038-dfb24da1-2c91-4d5b-87d6-8b97da8ab71d.png)
